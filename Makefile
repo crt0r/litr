@@ -2,11 +2,14 @@ BUILD_DIR = build
 EXE = raco exe -v -o $(BUILD_DIR)/litr src/main.rkt
 DIST = raco distribute $(BUILD_DIR)/litr.d $(BUILD_DIR)/litr
 INST = /usr/local/bin
+TEST_DIR = src/test
 
-all: litr
+all: litr test
 
-install: EXE_PATH = $(BUILD_DIR)/litr
-install:
+test:
+	raco test $(TEST_DIR)/*.rkt
+
+install: distribute
 	cp -r $(BUILD_DIR)/litr.d $(INST)
 	ln -s $(INST)/litr.d/bin/litr $(INST)/litr
 
@@ -14,7 +17,7 @@ uninstall:
 	rm -r $(INST)/litr.d
 	rm $(INST)/litr
 
-distribute: litr
+distribute: litr test
 	$(DIST)
 	
 litr:
